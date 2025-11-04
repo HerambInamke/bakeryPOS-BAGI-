@@ -1,0 +1,52 @@
+// Prisma schema for BakeryPOS
+
+datasource db {
+  provider = "mysql"
+  url      = env("DATABASE_URL")
+}
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+model User {
+  id            Int     @id @default(autoincrement())
+  email         String  @unique
+  password_hash String
+  role          String  @default("shop_owner")
+  createdAt     DateTime @default(now()) @map("created_at")
+  Shop          Shop?
+
+  @@map("users")
+}
+
+model Shop {
+  id         Int     @id @default(autoincrement())
+  userId     Int     @unique @map("user_id")
+  shopName   String? @map("shop_name")
+  mobile     String?
+  address    String?
+  ownerName  String? @map("owner_name")
+  profilePic String? @map("profile_pic")
+  updatedAt  DateTime @updatedAt @map("updated_at")
+
+  user User @relation(fields: [userId], references: [id])
+  products Product[]
+
+  @@map("shops")
+}
+
+model Product {
+  id          Int     @id @default(autoincrement())
+  shopId      Int     @map("shop_id")
+  productName String  @map("product_name")
+  price       Float
+  discount    Float   @default(0)
+  cgst        Float   @default(0)
+  sgst        Float   @default(0)
+  createdAt   DateTime @default(now()) @map("created_at")
+
+  shop Shop   @relation(fields: [shopId], references: [id])
+
+  @@map("products")
+}

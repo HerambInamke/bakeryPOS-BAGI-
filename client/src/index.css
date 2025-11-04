@@ -1,0 +1,19 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+html, body, #root {
+  height: 100%;
+}
+
+body {
+  @apply bg-gray-50 text-gray-900;
+}
+
+/* Smooth background/text transitions when toggling theme */
+:root {
+  --bg-transition: background-color 200ms ease, color 200ms ease;
+}
+html, body, #root {
+  transition: var(--bg-transition);
+}
